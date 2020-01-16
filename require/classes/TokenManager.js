@@ -1,6 +1,7 @@
 let SqlManager = require('./SqlManager');
 let SqlParameter = require('./SqlParameter');
 let AppConfig = require('../AppConfig');
+const jwt = require('jsonwebtoken');
 
 class TokenManager{
 
@@ -43,8 +44,8 @@ class TokenManager{
         }
       
         let bearerToken = bearerHeader.split(' ')[1];
-      
-        jwt.verify(bearerToken,this.secretKey,(err,authData)=>{
+
+        jwt.verify(bearerToken,AppConfig.tokenManager.secretKey,(err,authData)=>{
       
           if(err){
             res.sendStatus(403);
@@ -67,7 +68,7 @@ class TokenManager{
                     reject(err);
                 }
 
-                resolve({token});
+                resolve(token);
             });
         });
     }

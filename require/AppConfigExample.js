@@ -1,9 +1,9 @@
 module.exports = {
     "database":{
-        "user": "oauth",
-        "password":"Soad2011!",
-        "name":"Oauth",
-        "host":"192.168.0.131"
+        "user": "user",
+        "password":"password",
+        "name":"database",
+        "host":"host"
     },
     "tokenManager":{
         "secretKey":"ABCDAS-GDSFGDFSG-DSFAGDSFG"

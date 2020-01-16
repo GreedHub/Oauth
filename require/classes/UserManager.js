@@ -16,7 +16,19 @@ class UserManager{
     registerUser(user,password,mail){
         
         return new Promise(async(resolve,reject)=>{
-            if(await this.isUserRegistered(user)){
+
+            let isUserRegistered;
+            
+            await this.isUserRegistered(user)
+                .then(response=>{
+                    isUserRegistered = response;
+                })
+                .catch(err=>{
+                    console.log(err);
+                    reject(err);
+                })
+
+            if(isUserRegistered){
                 reject("User already registered");
             }
 
@@ -31,7 +43,7 @@ class UserManager{
 
             await this.sqlManager.executeProcedure("RegisterUser",params)
                 .then(response=>{
-                    resolve(response);
+                    resolve(true);
                 })
                 .catch(err=>{
                     console.log(err);
@@ -46,7 +58,7 @@ class UserManager{
             await this.sqlManager.executeProcedure("IsUserAlreadyRegistered",[new SqlParameter("user",user)])
                 .then(response=>{
                     if(response.length>0){
-                        resolve(true);
+                        resolve(response[0]);
                     }
                     resolve(false);
                 })
@@ -59,43 +71,70 @@ class UserManager{
 
     isValidUser(user,password){
         return new Promise(async(resolve,reject)=>{
-            let params = [
-                new SqlParameter("user",user),
-                new SqlParameter("password",password),
-            ]
-            await this.sqlManager.executeProcedure("IsUserAlreadyRegistered",params)
-                .then(response=>{
-                    if(response.length>0){
-                        resolve(true);
-                    }
-                    resolve(false);
+
+            let isUserRegistered;
+
+            await this.isUserRegistered(user)
+                .then(response=>{                    
+                    isUserRegistered = response;
                 })
                 .catch(err=>{
                     console.log(err);
                     reject(err);
                 })
+                
+            if(!isUserRegistered){
+                reject(false);
+            }
+
+            let encriptedPassword = this.generateSaltedPassword(password,isUserRegistered.salt);
+
+            resolve(encriptedPassword.password == isUserRegistered.password ? isUserRegistered.uid : false) ;
+    
         })
     }
 
     login(user,password){
         return new Promise(async (resolve,reject)=>{
-            if(await this.isValidUser(user,password)){
-                await this.tokenManager.generateToken({user,password})
-                    .then(token=>{
-                        this.tokenManager.saveToken(token,user,"null")
-                        resolve(token);
-                    })
-                    .catch(err=>{
-                        console.log(err);
-                        reject(err);
-                    })                
+
+            let isValidUser;
+
+            await this.isValidUser(user,password)
+                .then(response=>{                    
+                    isValidUser = response;
+                })
+                .catch(err=>{
+                    console.log(err);
+                    reject(err);
+                })
+
+            if(!isValidUser){                              
+                reject("Incorrect user/password combination");
             }
-            reject("Incorrect user/password combination");
+
+            await this.tokenManager.generateToken({user,password,"uid":isValidUser})
+                .then(token=>{
+                    this.tokenManager.saveToken(token,user,"null")
+                    resolve({token});
+                })
+                .catch(err=>{
+                    console.log(err);
+                    reject(err);
+                })  
         })
     }
 
     generateSaltedPassword(password,salt=null){
-        var buf = crypto.randomBytes(16).toString('base64');
+        
+        let encryptedPassword = {
+            "salt": salt!=null ? salt : crypto.randomBytes(32).toString('base64'),
+            "password":""
+        };
+
+        encryptedPassword.password = crypto.createHash('sha256').update(encryptedPassword.salt+password).digest('hex');
+
+        return(encryptedPassword);
+
     }
 
 }
