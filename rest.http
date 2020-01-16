@@ -1,0 +1,12 @@
+POST http://localhost:3000/login HTTP/1.1
+content-type: application/json
+
+{
+    "user":"test",
+    "password":"test"
+}
+
+###
+GET http://localhost:3000/resource HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ1c2VyIjoidGVzdCIsInBhc3N3b3JkIjoidGVzdCJ9LCJpYXQiOjE1NzkwNDMwNTAsImV4cCI6MTU3OTA0NjY1MH0.-RiynPiBpvITseYL_1y34qb7bYi2Q5tXjBxzEjrnvZY
