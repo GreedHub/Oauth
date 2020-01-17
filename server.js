@@ -18,6 +18,8 @@ const port = 3000;
 const tokenManager = new TokenManager();
 const userManager = new UserManager();
 
+
+
 /* Importacion de modulos de API */
 //const StockMovil = require('./exposed_services/stock_movil/main.js'); 
  
@@ -93,7 +95,7 @@ app.post("/register", (req,res)=>{
       console.log(err);
       res.json({
         status:401,
-        message:'user or password error'
+        message:err
       })
     })
 

@@ -9,7 +9,7 @@ content-type: application/json
 ###
 GET http://localhost:3000/resource HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXIiOiJ0ZXN0IiwicGFzc3dvcmQiOiJ0ZXN0IiwidWlkIjoxfSwiaWF0IjoxNTc5MTg4NjkxLCJleHAiOjE1NzkxOTIyOTF9.b89eHvHyqmEsSv26YMgbKberdMuypUq6eAbTfUAP3W0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXIiOiJ0ZXN0IiwicGFzc3dvcmQiOiJ0ZXN0IiwidWlkIjoxfSwiaWF0IjoxNTc5MjE5OTI0LCJleHAiOjE1NzkyMjM1MjR9.JgjOPACSUdae7n4zKmJHvHW7BaB1htlzdYY_NbiVgVc
 
 
 ###

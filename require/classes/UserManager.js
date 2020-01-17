@@ -29,7 +29,7 @@ class UserManager{
                 })
 
             if(isUserRegistered){
-                reject("User already registered");
+                return reject("User already registered");
             }
 
             let encriptedPassword = this.generateSaltedPassword(password);
@@ -112,7 +112,7 @@ class UserManager{
                 reject("Incorrect user/password combination");
             }
 
-            await this.tokenManager.generateToken({user,password,"uid":isValidUser})
+            await this.tokenManager.generateToken({user,"uid":isValidUser})
                 .then(token=>{
                     this.tokenManager.saveToken(token,user,"null")
                     resolve({token});
