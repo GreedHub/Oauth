@@ -1,4 +1,5 @@
-POST http://localhost:3000/login HTTP/1.1
+
+POST http://localhost:5000/login HTTP/1.1
 content-type: application/json
 
 {
@@ -7,17 +8,22 @@ content-type: application/json
 }
 
 ###
-GET http://localhost:3000/resource HTTP/1.1
+GET http://localhost:5000/resource HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXIiOiJ0ZXN0IiwicGFzc3dvcmQiOiJ0ZXN0IiwidWlkIjoxfSwiaWF0IjoxNTc5MjE5OTI0LCJleHAiOjE1NzkyMjM1MjR9.JgjOPACSUdae7n4zKmJHvHW7BaB1htlzdYY_NbiVgVc
 
 
 ###
-POST http://localhost:3000/register HTTP/1.1
+POST http://localhost:5000/register HTTP/1.1
 content-type: application/json
 
 {
     "user":"test",
     "password":"test",
-    "mail":"test"
+    "mail":"test",
+    "name":"test user"
 }
+
+###
+GET http://localhost:5000/getDefaultPermissions HTTP/1.1
+content-type: application/json

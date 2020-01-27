@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const cors = require('cors');
 const TokenManager = require('./require/classes/TokenManager');
 const UserManager = require('./require/classes/UserManager');
 /* const oauth2 = require('simple-oauth2').create(credentials); */
@@ -10,11 +11,13 @@ const UserManager = require('./require/classes/UserManager');
 /* Configuracion de Express*/
 const app = express();
 app.use(helmet());
+app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan('combined'));
+app.use
 
 /* App Constants */
-const port = 3000;
+const port = 5000;
 const tokenManager = new TokenManager();
 const userManager = new UserManager();
 
@@ -24,8 +27,15 @@ const userManager = new UserManager();
 //const StockMovil = require('./exposed_services/stock_movil/main.js'); 
  
 app.get("/resource", tokenManager.validateToken, (req,res)=>{
-
   res.json(req.authData);
+
+});
+
+app.get("/getDefaultPermissions", (req,res)=>{
+
+  const permissions = ['LOGIN','LOGOUT','REGISTER'];
+
+  res.json({permissions});
 
 });
 
@@ -87,7 +97,15 @@ app.post("/register", (req,res)=>{
     return;
   }
 
-  userManager.registerUser(req.body.user,req.body.password,req.body.mail)
+  if(!req.body.name){
+    res.json({
+      status:400,
+      message:'name not recived'
+    })
+    return;
+  }
+
+  userManager.registerUser(req.body.user,req.body.password,req.body.mail,req.body.name)
     .then(token=>{
       res.json(token);
     })

@@ -13,7 +13,7 @@ class UserManager{
         this.tokenManager = new TokenManager();
     }
 
-    registerUser(user,password,mail){
+    registerUser(user,password,mail,name){
         
         return new Promise(async(resolve,reject)=>{
 
@@ -39,6 +39,7 @@ class UserManager{
                 new SqlParameter("password",encriptedPassword.password),
                 new SqlParameter("mail",mail),
                 new SqlParameter("salt",encriptedPassword.salt),
+                new SqlParameter("fullName",name),
             ];
 
             await this.sqlManager.executeProcedure("RegisterUser",params)
@@ -89,7 +90,7 @@ class UserManager{
 
             let encriptedPassword = this.generateSaltedPassword(password,isUserRegistered.salt);
 
-            resolve(encriptedPassword.password == isUserRegistered.password ? isUserRegistered.uid : false) ;
+            resolve(encriptedPassword.password == isUserRegistered.password ? isUserRegistered : false) ;
     
         })
     }
@@ -111,11 +112,11 @@ class UserManager{
             if(!isValidUser){                              
                 reject("Incorrect user/password combination");
             }
-
-            await this.tokenManager.generateToken({user,"uid":isValidUser})
+            console.log(isValidUser)
+            await this.tokenManager.generateToken({user,"uid":isValidUser.uid})
                 .then(token=>{
                     this.tokenManager.saveToken(token,user,"null")
-                    resolve({token});
+                    resolve({token,name:isValidUser.FullName,mail:isValidUser.Mail});
                 })
                 .catch(err=>{
                     console.log(err);
