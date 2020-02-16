@@ -41,7 +41,7 @@ app.get("/getDefaultPermissions", (req,res)=>{
 
 app.post("/login", (req,res)=>{
 
-  if(!req.body.user){
+  if(!req.body.username){
     res.json({
       status:400,
       message:'user not recived'
@@ -57,7 +57,7 @@ app.post("/login", (req,res)=>{
     return;
   }
 
-  userManager.login(req.body.user,req.body.password)
+  userManager.login(req.body.username,req.body.password)
     .then(token=>{
       res.json(token);
     })
